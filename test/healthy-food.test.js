@@ -14,7 +14,8 @@ describe('Given a unregistered User that opened the app', () => {
 
   it('When this user wants to create a new post, Then a register/login form should be shown', async() => {
     const btn = root.querySelector('[data-testid="publish"]');
-    btn.click();
+    
+    btn.dispatchEvent(new MouseEvent('click'));
 
     await element.updateComplete;
 

@@ -19,6 +19,8 @@
   "dependencies": {
     "@vaadin/button": "^23.3.3",
     "@vaadin/dialog": "^23.3.3",
+    "@vaadin/password-field": "^23.3.3",
+    "@vaadin/text-field": "^23.3.3",
     "lit": "^2.0.2"
   },
   "devDependencies": {
