@@ -6,9 +6,15 @@ export default {
   component: 'healthy-food',
 };
 
-function Template({ isAccessFormOpened }) {
+function Template({ isAccessFormOpened, cssVars }) {
   return html`
-    <healthy-food .isAccessFormOpened=${isAccessFormOpened}> </healthy-food>
+    <section>
+      <healthy-food
+        style="--hf-bg-color: ${cssVars?.['--hf-bg-color'] || 'white'}"
+        .isAccessFormOpened=${isAccessFormOpened}
+      >
+      </healthy-food>
+    </section>
   `;
 }
 
@@ -20,4 +26,7 @@ App.args = {
 export const DialogOpened = Template.bind({});
 DialogOpened.args = {
   isAccessFormOpened: true,
+  cssVars: {
+    '--hf-bg-color': 'pink',
+  },
 };

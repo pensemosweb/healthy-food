@@ -10,14 +10,15 @@ export class HealthyFood extends LitElement {
   static get styles() {
     return css`
       :host {
-        background-color: var(--healthy-food-background-color);
+        background-color: var(--hf-bg-color);
+        display: block;
       }
     `;
   }
 
   static get properties() {
     return {
-      isAccessFormOpened: { type: Boolean, state: true }
+      isAccessFormOpened: { type: Boolean, state: true },
     };
   }
 
@@ -28,27 +29,25 @@ export class HealthyFood extends LitElement {
 
   render() {
     return html`
-     <main>
-      <h1>Healthy Food</h1>
-      <vaadin-button
-        data-testid="publish"
-        @click=${this.openAccessForm}
-      >
-        Publicar
-      </vaadin-button>
+      <main>
+        <h1>Healthy Food</h1>
+        <vaadin-button data-testid="publish" @click=${this.openAccessForm}>
+          Publicar
+        </vaadin-button>
 
-      <vaadin-dialog
-        .opened=${this.isAccessFormOpened}
-        @opened-changed=${this.accessFormChanged}
-        data-testid="access-form"
-        ${dialogRenderer(renderAccessForms, [])}
+        <vaadin-dialog
+          .opened=${this.isAccessFormOpened}
+          @opened-changed=${this.accessFormChanged}
+          data-testid="access-form"
+          ${dialogRenderer(renderAccessForms, [])}
+        >
+          <pw-login></pw-login>
+          <!-- Alex -->
+        </vaadin-dialog>
 
-      >
-        <pw-login></pw-login> <!-- Alex -->
-      </vaadin-dialog>
-      
-      <pw-publis-form></pw-publis-form><!-- Octavio -->
-     </main>
+        <pw-publis-form></pw-publis-form
+        ><!-- Octavio -->
+      </main>
     `;
   }
 
