@@ -4,22 +4,20 @@ import '../src/healthy-food.js';
 export default {
   title: 'HealthyFood',
   component: 'healthy-food',
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
 };
 
-function Template({ title, backgroundColor }) {
+function Template({ isAccessFormOpened }) {
   return html`
-    <healthy-food
-      style="--healthy-food-background-color: ${backgroundColor || 'white'}"
-      .title=${title}
-    >
-    </healthy-food>
+    <healthy-food .isAccessFormOpened=${isAccessFormOpened}> </healthy-food>
   `;
 }
 
 export const App = Template.bind({});
 App.args = {
-  title: 'My app',
+  isAccessFormOpened: false,
+};
+
+export const DialogOpened = Template.bind({});
+DialogOpened.args = {
+  isAccessFormOpened: true,
 };
