@@ -1,10 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import '@vaadin/button';
 import '@vaadin/dialog';
-
-import { dialogRenderer } from '@vaadin/dialog/lit.js';
-
-import renderAccessForms from './templates/renderAccessForms.js';
+import './pw-access-forms.js';
 
 export class HealthyFood extends LitElement {
   static get styles() {
@@ -18,13 +15,15 @@ export class HealthyFood extends LitElement {
 
   static get properties() {
     return {
-      isAccessFormOpened: { type: Boolean, state: true },
+      isAccessFormsOpened: { type: Boolean, state: true },
+      signUp: { type: Object, state: true },
     };
   }
 
   constructor() {
     super();
-    this.isAccessFormOpened = false;
+    this.isAccessFormsOpened = false;
+    this.signUp = { hasError: false, message: '' };
   }
 
   render() {
@@ -35,27 +34,16 @@ export class HealthyFood extends LitElement {
           Publicar
         </vaadin-button>
 
-        <vaadin-dialog
-          .opened=${this.isAccessFormOpened}
-          @opened-changed=${this.accessFormChanged}
-          data-testid="access-form"
-          ${dialogRenderer(renderAccessForms, [])}
-        >
-          <pw-login></pw-login>
-          <!-- Alex -->
-        </vaadin-dialog>
-
-        <pw-publis-form></pw-publis-form
-        ><!-- Octavio -->
+        <pw-access-form .isOpened=${this.isAccessFormsOpened}></pw-access-form>
       </main>
     `;
   }
 
   openAccessForm() {
-    this.isAccessFormOpened = true;
+    this.isAccessFormsOpened = true;
   }
 
   accessFormChanged(e) {
-    this.isAccessFormOpened = e.detail.value;
+    this.isAccessFormsOpened = e.detail.value;
   }
 }
