@@ -2,7 +2,6 @@ import { LitElement, html, css } from 'lit';
 import { dialogRenderer } from '@vaadin/dialog/lit.js';
 
 import './templates/pw-publish-form.js';
-import './templates/pw-header';
 
 import '@vaadin/button';
 import '@vaadin/dialog';
@@ -33,7 +32,6 @@ export class HealthyFood extends LitElement {
 
   render() {
     return html`
-      <pw-header></pw-header>
       <main>
         <h1>Healthy Food</h1>
         <vaadin-button data-testid="publish" @click=${this.openAccessForm}>

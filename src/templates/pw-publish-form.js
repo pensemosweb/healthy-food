@@ -1,7 +1,5 @@
 import { css, html, LitElement } from 'lit';
 
-import { publihPost } from '../services/publish.service';
-
 //COMPONENTES VAADIN
 import '@vaadin/button';
 import '@vaadin/custom-field';
@@ -79,8 +77,6 @@ export class pwPublishForm extends LitElement {
     return {
       text: { type: String },
       maxLength: { type: Number },
-      currentImage: { type: String },
-      hasError: { type: Boolean },
     };
   }
 
@@ -90,8 +86,6 @@ export class pwPublishForm extends LitElement {
     this.maxLength = 150;
     this.currentImage = '';
     this.fileReader = null;
-    this.hasError = false;
-    this.messageError = '';
   }
 
   connectedCallback() {
@@ -109,9 +103,7 @@ export class pwPublishForm extends LitElement {
   }
 
   render() {
-    console.log(this.messageError);
     return html`
-    <p>${this.messageError}</p>
       <form @submit=${this.onSubmit}>
         <div>
           <vaadin-text-field
@@ -201,32 +193,6 @@ export class pwPublishForm extends LitElement {
 
   onSubmit(evt) {
     evt.preventDefault();
-
-    const data = new FormData(evt.target);
-    const datos = {
-      title: data.get('title'),
-      image: this.currentImage,
-      price: data.get('price'),
-      description: data.get('description'),
-    };
-
-    fetch('http://localhost:3000/results', {
-      method: 'POST',
-      body: JSON.stringify(datos),
-      headers: { 'Content-type': 'application/json; charset=UTF-8' },
-    })
-      .then(res => {
-        if (res.status === '201') {
-          this.messageError = 'SOLICITUD REALIZADA CON EXITO';
-        }
-        if (!res.ok) throw Error(res.status);
-
-        return res;
-      })
-      .catch(error => {
-        this.hasError = true;
-        this.messageError = `Eror en la peticion, ${error}`;
-      });
   }
 
   textChanged(evt) {
