@@ -7,6 +7,7 @@ describe('Not and registered User, no logged in:', () => {});
 describe('Given a unregistered User that opened the app', () => {
   let element;
   let root;
+  
   beforeEach(async () => {
     element = await fixture(html`<healthy-food></healthy-food>`);
     root = element.shadowRoot;
