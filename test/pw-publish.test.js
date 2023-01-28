@@ -91,5 +91,9 @@ describe('Dado un formulario de publicacion', () => {
 
       expect(description.value.length).to.be.below(maxlength);
     });
+
+    it('Cuando el usuario de click en publicar, la publicacion debera ser enviada a una base de datos', () => {
+      const btn = root.querySelector('[data-testid="description"]');
+    });
   });
 });

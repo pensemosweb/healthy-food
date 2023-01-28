@@ -1,4 +1,10 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement, nothing } from 'lit';
+
+import { post } from '../services/publish.service';
+import publishFormStyle from '../styles/publishForm.style';
+
+import './pw-success-alert.js';
+import './pw-error-alert.js';
 
 //COMPONENTES VAADIN
 import '@vaadin/button';
@@ -11,72 +17,16 @@ import '@vaadin/text-field';
 
 export class pwPublishForm extends LitElement {
   static get styles() {
-    return css`
-      .publish__viewImage {
-        width: 15rem;
-      }
-
-      .publish__previewImages,
-      .publish__title,
-      .publish__description {
-        width: 100%;
-      }
-
-      .publish__price,
-      .publish__selectImage {
-        width: auto;
-      }
-
-      .publish__description {
-        height: 10rem;
-        margin-top: -3rem;
-      }
-
-      .publish__previewImages {
-        margin-top: 0.4rem;
-      }
-
-      .publish__viewImage {
-        margin-bottom: 2rem;
-      }
-
-      .inputfile {
-        width: 0px;
-        height: 0px;
-        opacity: 0;
-        overflow: hidden;
-        position: absolute;
-        z-index: -1;
-      }
-
-      .iborrainputfile__icon {
-        height: 1.4rem;
-        margin-top: -0.4rem;
-      }
-
-      .flex {
-        display: flex;
-        gap: 1rem;
-        justify-content: space-between;
-      }
-
-      .publish__button {
-        width: 100%;
-      }
-
-      .btn__container button {
-        width: 100%;
-        border: none;
-        outline: none;
-        background: transparent;
-      }
-    `;
+    return [publishFormStyle];
   }
 
   static get properties() {
     return {
       text: { type: String },
       maxLength: { type: Number },
+      currentImage: { type: String },
+      publish: { type: Object },
+      closed: { type: Boolean },
     };
   }
 
@@ -86,6 +36,16 @@ export class pwPublishForm extends LitElement {
     this.maxLength = 150;
     this.currentImage = '';
     this.fileReader = null;
+    this.publish = {
+      title: '',
+      image: '',
+      price: '',
+      description: '',
+      hasError: false,
+      success: false,
+      message: '',
+    };
+    this.closed = false;
   }
 
   connectedCallback() {
@@ -103,8 +63,24 @@ export class pwPublishForm extends LitElement {
   }
 
   render() {
+    console.log(this.publish.success, this.closed);
     return html`
-      <form @submit=${this.onSubmit}>
+    ${
+      this.publish.success
+        ? html`<pw-success-alert
+            ?closed=${this.closed}
+            @close-alert=${this.closeAlertSuccess}
+            .message=${this.publish.message}
+          ></pw-success-alert>`
+        : this.publish.hasError
+        ? html`<pw-error-alert
+            ?closed=${this.closed}
+            @close-alert=${this.closeAlertError}
+            .message=${this.publish.message}
+          ></pw-error-alert>`
+        : nothing
+    }
+      <form class='form' @submit=${this.onSubmit}>
         <div>
           <vaadin-text-field
             label="Titulo de la publicacion"
@@ -183,7 +159,7 @@ export class pwPublishForm extends LitElement {
 
 
         <div class='btn__container'>
-        <button>
+        <button data-testid="btn">
           <vaadin-button class="publish__button">Publicar</vaadin-button>
           </button>
         </div>
@@ -191,8 +167,36 @@ export class pwPublishForm extends LitElement {
     `;
   }
 
-  onSubmit(evt) {
+  async onSubmit(evt) {
     evt.preventDefault();
+
+    const data = new FormData(evt.target);
+
+    //REFACTOR: SUBIR FECHA Y HORA DE CREACION
+    const datos = {
+      title: data.get('title'),
+      price: data.get('price'),
+      description: data.get('description'),
+      image: this.currentImage,
+    };
+
+    evt.target.reset();
+    this.currentImage = '';
+
+    const result = await post('http://localhost:3000/resultsi', datos);
+
+    this.publish = { ...this.publish, ...result };
+    this.closed = false;
+  }
+
+  closeAlertSuccess() {
+    this.closed = true;
+    this.publish.success = false;
+  }
+
+  closeAlertError() {
+    this.closed = true;
+    this.publish.hasError = false;
   }
 
   textChanged(evt) {
