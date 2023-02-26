@@ -1,4 +1,4 @@
-export async function post(url, body) {
+async function post(url, body) {
   let response;
   try {
     response = await fetch(url, {
@@ -23,3 +23,5 @@ export async function post(url, body) {
     return { hasError: true, message: err.message, error: err };
   }
 }
+
+export default { post };

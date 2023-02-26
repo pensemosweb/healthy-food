@@ -1,6 +1,6 @@
 import { html, LitElement, nothing } from 'lit';
 
-import { post } from '../services/publish.service';
+import publishService from '../services/publish.service';
 import publishFormStyle from '../styles/publishForm.style';
 
 import './pw-success-alert.js';
@@ -65,7 +65,7 @@ export class pwPublishForm extends LitElement {
   render() {
     console.log(this.publish.success, this.closed);
     return html`
-    ${
+		${
       this.publish.success
         ? html`<pw-success-alert
             ?closed=${this.closed}
@@ -80,91 +80,91 @@ export class pwPublishForm extends LitElement {
           ></pw-error-alert>`
         : nothing
     }
-      <form class='form' @submit=${this.onSubmit}>
-        <div>
-          <vaadin-text-field
-            label="Titulo de la publicacion"
-            name='title'
-            class="publish__title"
-            data-testid="title"
-            required
-            error-message="El titulo es obligatorio"
-          >
-          </vaadin-text-field>
-        </div>
+			<form class='form' @submit=${this.onSubmit} data-testid="form">
+				<div>
+					<vaadin-text-field
+						label="Titulo de la publicacion"
+						name='title'
+						class="publish__title"
+						data-testid="title"
+						required
+						error-message="El titulo es obligatorio"
+					>
+					</vaadin-text-field>
+				</div>
 
-        <div class="flex">
-          <vaadin-custom-field
-            class="publish__selectImage"
-            label="Subir imagen"
-            data-testid="files"'
-            required
-            error-message='Debe seleccionar una imagen'
-          >
-            <div class="container-input">
-              <input
-                @change=${this.changeImage}
-                type="file"
-                name="file-3"
-                id="file-3"
-                class="inputfile"
-                data-testid="file"
-                required
-              />
-              <label for="file-3">
-                <vaadin-icon
-                  icon="vaadin:cloud-upload-o"
-                  class="iborrainputfile__icon"
-                ></vaadin-icon>
-                <span class="iborrainputfile">Seleccionar archivo</span>
-              </label>
-            </div>
-          </vaadin-custom-field>
+				<div class="flex">
+					<vaadin-custom-field
+						class="publish__selectImage"
+						label="Subir imagen"
+						data-testid="files"'
+						required
+						error-message='Debe seleccionar una imagen'
+					>
+						<div class="container-input">
+							<input
+								@change=${this.changeImage}
+								type="file"
+								name="file-3"
+								id="file-3"
+								class="inputfile"
+								data-testid="file"
+								required
+							/>
+							<label for="file-3">
+								<vaadin-icon
+									icon="vaadin:cloud-upload-o"
+									class="iborrainputfile__icon"
+								></vaadin-icon>
+								<span class="iborrainputfile">Seleccionar archivo</span>
+							</label>
+						</div>
+					</vaadin-custom-field>
 
-          <vaadin-number-field
-            label="Precio"
-            class="publish__price"
-            name="price"
-            data-testid="price"
-            required
-            error-message='El precio es necesario'
-          >
-            <div slot="prefix">$</div>
-          </vaadin-number-field>
-        </div>
+					<vaadin-number-field
+						label="Precio"
+						class="publish__price"
+						name="price"
+						data-testid="price"
+						required
+						error-message='El precio es necesario'
+					>
+						<div slot="prefix">$</div>
+					</vaadin-number-field>
+				</div>
 
-        <div class="publish__previewImages">
-          <center>
-            <img
-              src=${this.currentImage}
-              class="publish__viewImage"
-              data-testid="selected-image"
-            />
-          </center>
-        </div>
+				<div class="publish__previewImages">
+					<center>
+						<img
+							src=${this.currentImage}
+							class="publish__viewImage"
+							data-testid="selected-image"
+						/>
+					</center>
+				</div>
 
-        <div>
-          <vaadin-text-area
-            class="publish__description"
-            name="description"
-            label="Descripción"
-            .maxlength="${this.maxLength}"
-            @value-changed="${this.textChanged}"
-            .helperText="${`${this.text.length}/${this.maxLength}`}"
-            data-testid="description"
-            clear-button-visible
-          >
-          </vaadin-text-area>
-        </div>
+				<div>
+					<vaadin-text-area
+						class="publish__description"
+						name="description"
+						label="Descripción"
+						.maxlength="${this.maxLength}"
+						@value-changed="${this.textChanged}"
+						.helperText="${`${this.text.length}/${this.maxLength}`}"
+						data-testid="description"
+						clear-button-visible
+					>
+					</vaadin-text-area>
+				</div>
 
 
-        <div class='btn__container'>
-        <button data-testid="btn">
-          <vaadin-button class="publish__button">Publicar</vaadin-button>
-          </button>
-        </div>
-      </form>
-    `;
+				<div class='btn__container'>
+				<button data-testid="btn">
+					<vaadin-button class="publish__button">Publicar</vaadin-button>
+					</button>
+				</div>
+			</form>
+		`;
   }
 
   async onSubmit(evt) {
@@ -183,7 +183,10 @@ export class pwPublishForm extends LitElement {
     evt.target.reset();
     this.currentImage = '';
 
-    const result = await post('http://localhost:3000/resultsi', datos);
+    const result = await publishService.post(
+      'http://localhost:3000/results',
+      datos
+    );
 
     this.publish = { ...this.publish, ...result };
     this.closed = false;

@@ -1,11 +1,14 @@
 import { html } from 'lit';
 import { fixture, expect, oneEvent } from '@open-wc/testing';
+import sinon from 'sinon';
+import publishService from '../src/services/publish.service.js';
 
 import '../src/HealthyFood.js';
 
 describe('Dado un formulario de publicacion', () => {
   let element;
   let root;
+
   beforeEach(async () => {
     element = await fixture(html`<pw-publish-form></pw-publish-form>`);
     root = element.shadowRoot;
@@ -92,8 +95,28 @@ describe('Dado un formulario de publicacion', () => {
       expect(description.value.length).to.be.below(maxlength);
     });
 
-    it('Cuando el usuario de click en publicar, la publicacion debera ser enviada a una base de datos', () => {
-      const btn = root.querySelector('[data-testid="description"]');
+    it('Cuando el usuario de click en publicar, la publicacion debera ser guardada', async () => {
+      const post = sinon.stub(publishService, 'post');
+      post.returns({
+        success: true,
+        title: 'Venta de tamales',
+        price: '12',
+        description: '2x1',
+        image: 'tamales.png',
+      });
+
+      element.onSubmit({
+        target: root.querySelector('[data-testid="form"]'),
+        preventDefault: () => {},
+      });
+
+      await element.updateComplete;
+
+      expect(element.publish.success).to.be.equal(true);
+      expect(element.publish.title).to.be.equal('Venta de tamales');
+      expect(element.publish.price).to.be.equal('12');
+      expect(element.publish.description).to.be.equal('2x1');
+      expect(element.publish.image).to.be.equal('tamales.png');
     });
   });
 });
