@@ -34,7 +34,10 @@ export class HealthyFood extends LitElement {
           Publicar
         </vaadin-button>
 
-        <pw-access-form .isOpened=${this.isAccessFormsOpened}></pw-access-form>
+        <pw-access-form
+          data-testid="access-form"
+          .isOpened=${this.isAccessFormsOpened}
+        ></pw-access-form>
       </main>
     `;
   }

@@ -1,9 +1,11 @@
+/* eslint import/no-named-as-default-member: off */
+
 import { LitElement, html } from 'lit';
 import { dialogRenderer } from '@vaadin/dialog/lit';
 import '@vaadin/text-field';
 import '@vaadin/password-field';
 import { collectFormData } from './utils/forms.js';
-import { post } from './utils/requests.js';
+import requests from './utils/requests.js';
 
 class PwAccessForm extends LitElement {
   static get is() {
@@ -39,7 +41,10 @@ class PwAccessForm extends LitElement {
       <vaadin-dialog
         .opened=${this.isOpened}
         data-testid="access-form"
-        ${dialogRenderer(this.renderAccessForms, [this.signUp.hasError])}
+        ${dialogRenderer(this.renderAccessForms, [
+          this.signUp.hasError,
+          this.signUp.message,
+        ])}
       >
       </vaadin-dialog>
     `;
@@ -50,8 +55,14 @@ class PwAccessForm extends LitElement {
   }
 
   renderRegister() {
-    const { fullName, password, confirmedPassword, hasError, errorMessage } =
-      this.signUp;
+    const {
+      fullName,
+      password,
+      confirmedPassword,
+      hasError,
+      errorMessage,
+      message,
+    } = this.signUp;
 
     return html`
       <form @submit=${this.doSignUp}>
@@ -79,6 +90,7 @@ class PwAccessForm extends LitElement {
           .value=${confirmedPassword}
         >
         </vaadin-password-field>
+        ${message}
         <button>Registrar</button>
       </form>
 
@@ -94,7 +106,10 @@ class PwAccessForm extends LitElement {
   async doSignUp(evt) {
     evt.preventDefault();
     const body = collectFormData(evt.target);
-    const result = await post('/dummies/api/signup/success', body);
+    const result = await requests.post(
+      '/dummies/api/signup/success.json',
+      body
+    );
 
     this.signUp = { ...this.signUp, ...result };
   }

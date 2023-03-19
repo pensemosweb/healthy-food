@@ -1,5 +1,5 @@
 const host = 'http://localhost:8000';
-export async function post(url, body) {
+async function post(url, body) {
   let response;
   try {
     response = await fetch(host + url, {
@@ -19,3 +19,5 @@ export async function post(url, body) {
     return { hasError: true, errorMessage: err.message, error: err };
   }
 }
+
+export default { post };

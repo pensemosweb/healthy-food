@@ -12,15 +12,14 @@ describe('Given a unregistered User that opened the app', () => {
     root = element.shadowRoot;
   });
 
-  it('When this user wants to create a new post, Then a register/login form should be shown', async() => {
+  it('When this user wants to create a new post, Then a register/login form should be shown', async () => {
     const btn = root.querySelector('[data-testid="publish"]');
-    
+
     btn.dispatchEvent(new MouseEvent('click'));
 
     await element.updateComplete;
 
     const modal = root.querySelector('[data-testid="access-form"]');
-    expect(modal).to.has.property('opened', true);
-  })
-
+    expect(modal).to.has.property('isOpened', true);
+  });
 });
