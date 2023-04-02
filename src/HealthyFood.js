@@ -1,17 +1,20 @@
 import { LitElement, html, css } from 'lit';
-import '@vaadin/button';
-import '@vaadin/dialog';
-
 import { dialogRenderer } from '@vaadin/dialog/lit.js';
 
-import renderAccessForms from './templates/renderAccessForms.js';
+import './components/pw-publish-form/pw-publish-form.js';
+
+import '@vaadin/button';
+import '@vaadin/dialog';
 
 export class HealthyFood extends LitElement {
   static get styles() {
     return css`
       :host {
-        background-color: var(--hf-bg-color);
-        display: block;
+        background-color: var(--healthy-food-background-color);
+      }
+
+      main {
+        margin-top: 6rem;
       }
     `;
   }
@@ -19,6 +22,7 @@ export class HealthyFood extends LitElement {
   static get properties() {
     return {
       isAccessFormOpened: { type: Boolean, state: true },
+      isPublishFormOpened: { type: Boolean, state: true },
     };
   }
 
@@ -32,6 +36,15 @@ export class HealthyFood extends LitElement {
       <main>
         <h1>Healthy Food</h1>
         <vaadin-button data-testid="publish" @click=${this.openAccessForm}>
+          Acceder
+        </vaadin-button>
+
+        <vaadin-button
+          data-testid="publish"
+          @click=${() => {
+            this.isPublishFormOpened = true;
+          }}
+        >
           Publicar
         </vaadin-button>
 
@@ -39,14 +52,22 @@ export class HealthyFood extends LitElement {
           .opened=${this.isAccessFormOpened}
           @opened-changed=${this.accessFormChanged}
           data-testid="access-form"
-          ${dialogRenderer(renderAccessForms, [])}
         >
           <pw-login></pw-login>
           <!-- Alex -->
+          <pw-register></pw-register>
+          <!-- Pepe -->
         </vaadin-dialog>
 
-        <pw-publis-form></pw-publis-form
-        ><!-- Octavio -->
+        <vaadin-dialog
+          .opened=${this.isPublishFormOpened}
+          data-testid="publish-form"
+          @opened-changed=${e => {
+            this.isPublishFormOpened = e.detail.value;
+          }}
+          ${dialogRenderer(() => html`<pw-publish-form></pw-publish-form>`, [])}
+        >
+        </vaadin-dialog>
       </main>
     `;
   }
