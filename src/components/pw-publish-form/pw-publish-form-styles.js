@@ -18,7 +18,6 @@ export default css`
 
   .publish__description {
     height: 10rem;
-    margin-top: -3rem;
   }
 
   .publish__previewImages {

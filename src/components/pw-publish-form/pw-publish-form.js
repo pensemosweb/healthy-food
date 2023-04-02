@@ -1,10 +1,10 @@
 import { html, LitElement, nothing } from 'lit';
 
-import publishService from '../services/publish.service';
-import publishFormStyle from '../styles/publishForm.style';
+import publishService from '../../services/publish.service';
+import publishFormStyle from './pw-publish-form-styles';
 
-import './pw-success-alert.js';
-import './pw-error-alert.js';
+import '../../templates/pw-success-alert.js';
+import '../../templates/pw-error-alert.js';
 
 //COMPONENTES VAADIN
 import '@vaadin/button';
@@ -15,7 +15,7 @@ import '@vaadin/number-field';
 import '@vaadin/text-area';
 import '@vaadin/text-field';
 
-export class pwPublishForm extends LitElement {
+class pwPublishForm extends LitElement {
   static get styles() {
     return [publishFormStyle];
   }
@@ -63,7 +63,6 @@ export class pwPublishForm extends LitElement {
   }
 
   render() {
-    console.log(this.publish.success, this.closed);
     return html`
 		${
       this.publish.success
@@ -134,13 +133,16 @@ export class pwPublishForm extends LitElement {
 				</div>
 
 				<div class="publish__previewImages">
-					<center>
-						<img
-							src=${this.currentImage}
-							class="publish__viewImage"
-							data-testid="selected-image"
-						/>
-					</center>
+          ${
+            this.currentImage
+              ? html`<img
+                  src=${this.currentImage}
+                  class="publish__viewImage"
+                  data-testid="selected-image"
+                  alt="Previsualización de la imagen a subir"
+                />`
+              : null
+          }
 				</div>
 
 				<div>
@@ -172,7 +174,7 @@ export class pwPublishForm extends LitElement {
 
     const data = new FormData(evt.target);
 
-    //REFACTOR: SUBIR FECHA Y HORA DE CREACION
+    // @TODO: SUBIR FECHA Y HORA DE CREACION
     const datos = {
       title: data.get('title'),
       price: data.get('price'),
